@@ -1,0 +1,267 @@
+
+package AirIndia;
+
+public class PassengerManagement {
+
+    private int passId;
+    private String name;
+    private int seatno;
+
+    public PassengerManagement(int passId, String name, int seatno) {
+        this.passId = passId;
+        this.name = name;
+        this.seatno = seatno;
+    }
+
+    public int getPassId() {
+        return passId;
+    }
+
+    public void setPassId(int passId) {
+        this.passId = passId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSeatno() {
+        return seatno;
+    }
+
+    public void setSeatno(int seatno) {
+        this.seatno = seatno;
+    }
+
+    @Override
+    public String toString() {
+        return "PassengerManagement [passId=" + passId + ", name=" + name + ", seatno=" + seatno + "]";
+    }
+}
+
+---------------------------------
+
+package AirIndia;
+
+import java.util.ArrayList;
+
+public class FlightClass {
+
+    private int flightNo;
+    private String source;
+    private String destination;
+    private int noOfPass;
+    private ArrayList<PassengerManagement> passengers;
+
+    public FlightClass(int flightNo, String source, String destination, int noOfPass) {
+        this.flightNo = flightNo;
+        this.source = source;
+        this.destination = destination;
+        this.noOfPass = noOfPass;
+        this.passengers = new ArrayList<>();
+    }
+
+    public int getFlightNo() {
+        return flightNo;
+    }
+
+    public void setFlightNo(int flightNo) {
+        this.flightNo = flightNo;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public int getNoOfPass() {
+        return noOfPass;
+    }
+
+    public void setNoOfPass(int noOfPass) {
+        this.noOfPass = noOfPass;
+    }
+
+    public boolean addPassenger(PassengerManagement p) {
+        for (PassengerManagement existing : passengers) {
+            if (existing.getSeatno() == p.getSeatno()) {
+                System.out.println("Seat number " + p.getSeatno() + " is already booked!");
+                return false;
+            }
+        }
+        passengers.add(p);
+        System.out.println("Passenger added successfully!");
+        return true;
+    }
+
+    public boolean removePassenger(int passId) {
+        for (PassengerManagement p : passengers) {
+            if (p.getPassId() == passId) {
+                passengers.remove(p);
+                System.out.println("Passenger with ID " + passId + " removed successfully!");
+                return true;
+            }
+        }
+        System.out.println("Passenger ID not found!");
+        return false;
+    }
+
+    public PassengerManagement searchPassenger(int seatNo) {
+        for (PassengerManagement p : passengers) {
+            if (p.getSeatno() == seatNo) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public void displayAllPassengers() {
+        if (passengers.isEmpty()) {
+            System.out.println("No passengers booked yet!");
+        } else {
+            System.out.println("\nPassenger List for Flight " + flightNo + ":");
+            for (PassengerManagement p : passengers) {
+                System.out.println("ID: " + p.getPassId() + ", Name: " + p.getName() + ", Seat: " + p.getSeatno());
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Flight Details [FlightNo=" + flightNo + ", Source=" + source + ", Destination=" + destination
+                + ", Passenger Capacity=" + noOfPass + "]";
+    }
+}
+-----------------------------
+package AirIndia;
+
+public class BusinessFlight extends FlightClass {
+
+    private boolean baggageAccess;
+
+    public BusinessFlight(int flightNo, String source, String destination, int noOfPass, boolean baggageAccess) {
+        super(flightNo, source, destination, noOfPass);
+        this.baggageAccess = baggageAccess;
+    }
+
+    public boolean hasBaggageAccess() {
+        return baggageAccess;
+    }
+
+    public void setBaggageAccess(boolean baggageAccess) {
+        this.baggageAccess = baggageAccess;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Baggage Access=" + (baggageAccess ? "Available" : "Not Available");
+    }
+}
+---------------------------
+package AirIndia;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== Welcome to AirIndia Airline Booking System ===");
+
+        System.out.print("Enter Flight Number: ");
+        int fno = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Source: ");
+        String source = sc.nextLine();
+
+        System.out.print("Enter Destination: ");
+        String destination = sc.nextLine();
+
+        System.out.print("Enter Total Passenger Capacity: ");
+        int capacity = sc.nextInt();
+
+        System.out.print("Does this Business Flight have baggage access? (true/false): ");
+        boolean bagAccess = sc.nextBoolean();
+
+        BusinessFlight flight = new BusinessFlight(fno, source, destination, capacity, bagAccess);
+        System.out.println("\nFlight Created Successfully!");
+        System.out.println(flight);
+
+        int choice;
+
+        do {
+            System.out.println("\n===============================");
+            System.out.println("     AIRINDIA BOOKING MENU     ");
+            System.out.println("===============================");
+            System.out.println("1. ADD Passenger");
+            System.out.println("2. REMOVE Passenger");
+            System.out.println("3. SEARCH Passenger");
+            System.out.println("4. DISPLAY All Passengers");
+            System.out.println("5. EXIT");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("\nEnter Passenger ID: ");
+                    int pid = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Passenger Name: ");
+                    String pname = sc.nextLine();
+                    System.out.print("Enter Seat Number: ");
+                    int seat = sc.nextInt();
+
+                    PassengerManagement newPass = new PassengerManagement(pid, pname, seat);
+                    flight.addPassenger(newPass);
+                    break;
+
+                case 2:
+                    System.out.print("\nEnter Passenger ID to Remove: ");
+                    int removeId = sc.nextInt();
+                    flight.removePassenger(removeId);
+                    break;
+
+                case 3:
+                    System.out.print("\nEnter Seat Number to Search: ");
+                    int searchSeat = sc.nextInt();
+                    PassengerManagement found = flight.searchPassenger(searchSeat);
+                    if (found != null)
+                        System.out.println("Passenger Found: " + found);
+                    else
+                        System.out.println("Passenger Not Found!");
+                    break;
+
+                case 4:
+                    flight.displayAllPassengers();
+                    break;
+
+                case 5:
+                    System.out.println("\nThank you for using AirIndia Booking System!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+
+        } while (choice != 5);
+    }
+}
+
