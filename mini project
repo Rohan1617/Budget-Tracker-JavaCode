@@ -1,0 +1,1724 @@
+//flight 
+package AirIndia;
+
+public class PassengerManagement {
+
+    private int passId;
+    private String name;
+    private int seatno;
+
+    public PassengerManagement(int passId, String name, int seatno) {
+        this.passId = passId;
+        this.name = name;
+        this.seatno = seatno;
+    }
+
+    public int getPassId() {
+        return passId;
+    }
+
+    public void setPassId(int passId) {
+        this.passId = passId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSeatno() {
+        return seatno;
+    }
+
+    public void setSeatno(int seatno) {
+        this.seatno = seatno;
+    }
+
+    @Override
+    public String toString() {
+        return "PassengerManagement [passId=" + passId + ", name=" + name + ", seatno=" + seatno + "]";
+    }
+}
+
+---------------------------------
+
+package AirIndia;
+
+import java.util.ArrayList;
+
+public class FlightClass {
+
+    private int flightNo;
+    private String source;
+    private String destination;
+    private int noOfPass;
+    private ArrayList<PassengerManagement> passengers;
+
+    public FlightClass(int flightNo, String source, String destination, int noOfPass) {
+        this.flightNo = flightNo;
+        this.source = source;
+        this.destination = destination;
+        this.noOfPass = noOfPass;
+        this.passengers = new ArrayList<>();
+    }
+
+    public int getFlightNo() {
+        return flightNo;
+    }
+
+    public void setFlightNo(int flightNo) {
+        this.flightNo = flightNo;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public int getNoOfPass() {
+        return noOfPass;
+    }
+
+    public void setNoOfPass(int noOfPass) {
+        this.noOfPass = noOfPass;
+    }
+
+    public boolean addPassenger(PassengerManagement p) {
+        for (PassengerManagement existing : passengers) {
+            if (existing.getSeatno() == p.getSeatno()) {
+                System.out.println("Seat number " + p.getSeatno() + " is already booked!");
+                return false;
+            }
+        }
+        passengers.add(p);
+        System.out.println("Passenger added successfully!");
+        return true;
+    }
+
+    public boolean removePassenger(int passId) {
+        for (PassengerManagement p : passengers) {
+            if (p.getPassId() == passId) {
+                passengers.remove(p);
+                System.out.println("Passenger with ID " + passId + " removed successfully!");
+                return true;
+            }
+        }
+        System.out.println("Passenger ID not found!");
+        return false;
+    }
+
+    public PassengerManagement searchPassenger(int seatNo) {
+        for (PassengerManagement p : passengers) {
+            if (p.getSeatno() == seatNo) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public void displayAllPassengers() {
+        if (passengers.isEmpty()) {
+            System.out.println("No passengers booked yet!");
+        } else {
+            System.out.println("\nPassenger List for Flight " + flightNo + ":");
+            for (PassengerManagement p : passengers) {
+                System.out.println("ID: " + p.getPassId() + ", Name: " + p.getName() + ", Seat: " + p.getSeatno());
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Flight Details [FlightNo=" + flightNo + ", Source=" + source + ", Destination=" + destination
+                + ", Passenger Capacity=" + noOfPass + "]";
+    }
+}
+-----------------------------
+package AirIndia;
+
+public class BusinessFlight extends FlightClass {
+
+    private boolean baggageAccess;
+
+    public BusinessFlight(int flightNo, String source, String destination, int noOfPass, boolean baggageAccess) {
+        super(flightNo, source, destination, noOfPass);
+        this.baggageAccess = baggageAccess;
+    }
+
+    public boolean hasBaggageAccess() {
+        return baggageAccess;
+    }
+
+    public void setBaggageAccess(boolean baggageAccess) {
+        this.baggageAccess = baggageAccess;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Baggage Access=" + (baggageAccess ? "Available" : "Not Available");
+    }
+}
+---------------------------
+package AirIndia;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== Welcome to AirIndia Airline Booking System ===");
+
+        System.out.print("Enter Flight Number: ");
+        int fno = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Source: ");
+        String source = sc.nextLine();
+
+        System.out.print("Enter Destination: ");
+        String destination = sc.nextLine();
+
+        System.out.print("Enter Total Passenger Capacity: ");
+        int capacity = sc.nextInt();
+
+        System.out.print("Does this Business Flight have baggage access? (true/false): ");
+        boolean bagAccess = sc.nextBoolean();
+
+        BusinessFlight flight = new BusinessFlight(fno, source, destination, capacity, bagAccess);
+        System.out.println("\nFlight Created Successfully!");
+        System.out.println(flight);
+
+        int choice;
+
+        do {
+            System.out.println("\n===============================");
+            System.out.println("     AIRINDIA BOOKING MENU     ");
+            System.out.println("===============================");
+            System.out.println("1. ADD Passenger");
+            System.out.println("2. REMOVE Passenger");
+            System.out.println("3. SEARCH Passenger");
+            System.out.println("4. DISPLAY All Passengers");
+            System.out.println("5. EXIT");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("\nEnter Passenger ID: ");
+                    int pid = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Passenger Name: ");
+                    String pname = sc.nextLine();
+                    System.out.print("Enter Seat Number: ");
+                    int seat = sc.nextInt();
+
+                    PassengerManagement newPass = new PassengerManagement(pid, pname, seat);
+                    flight.addPassenger(newPass);
+                    break;
+
+                case 2:
+                    System.out.print("\nEnter Passenger ID to Remove: ");
+                    int removeId = sc.nextInt();
+                    flight.removePassenger(removeId);
+                    break;
+
+                case 3:
+                    System.out.print("\nEnter Seat Number to Search: ");
+                    int searchSeat = sc.nextInt();
+                    PassengerManagement found = flight.searchPassenger(searchSeat);
+                    if (found != null)
+                        System.out.println("Passenger Found: " + found);
+                    else
+                        System.out.println("Passenger Not Found!");
+                    break;
+
+                case 4:
+                    flight.displayAllPassengers();
+                    break;
+
+                case 5:
+                    System.out.println("\nThank you for using AirIndia Booking System!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+
+        } while (choice != 5);
+    }
+}
+//=========================Ride management system===================================
+package ridesharingsys;
+
+public class Ride {
+
+	int rideid;
+	String source;
+	String destination;
+	int fare;
+	String status;
+	public Ride(int rideid, String source, String destination, int fare) {
+		super();
+		this.rideid = rideid;
+		this.source = source;
+		this.destination = destination;
+		this.fare = fare;
+		this.status="Booked";
+	}
+	public int getRideid() {
+		return rideid;
+	}
+	public void setRideid(int rideid) {
+		this.rideid = rideid;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
+	}
+	public String getDestination() {
+		return destination;
+	}
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+	public int getFare() {
+		return fare;
+	}
+	public void setFare(int fare) {
+		this.fare = fare;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "Ride [rideid=" + rideid + ", source=" + source + ", destination=" + destination + ", fare=" + fare
+				+ ", status=" + status + "]";
+	}
+	
+
+}
+-----------------
+package ridesharingsys;
+
+import java.util.ArrayList;
+
+public class Customer {
+
+	int custid;
+	String name;
+	ArrayList<Ride>rides;
+	public Customer(int custid, String name) {
+		super();
+		this.custid = custid;
+		this.name = name;
+		this.rides=new ArrayList<Ride>();
+	}
+	public int getCustid() {
+		return custid;
+	}
+	public void setCustid(int custid) {
+		this.custid = custid;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public ArrayList<Ride> getRides() {
+		return rides;
+	}
+	public void setRides(ArrayList<Ride> rides) {
+		this.rides = rides;
+	}
+	@Override
+	public String toString() {
+		return "Customer [custid=" + custid + ", name=" + name + ", rides=" + rides + "]";
+	}
+	public void bookride(Ride r)
+	{
+		rides.add(r);
+	}
+	public void cancelride(int rideId) 
+	{
+		for(Ride r:rides)
+		{
+			if(r.getRideid()==rideId)
+			{
+				r.setStatus("CANCEL");
+				r.setFare(0);
+				System.out.println("Ride cancel successfully for "+rideId);
+				return;
+			}
+		}
+			System.out.println("Ride with given ID is not found");
+	}
+	public void diplayDeatils()
+	{
+		for(Ride r: rides)
+		{
+			System.out.println(r);
+		}
+	}
+	public void calculatebill()
+	{
+		int total=0;
+		for(Ride r:rides)
+		{
+			total+=r.getFare();
+		}
+		System.out.println("Total: "+total);
+	}
+	public void displayBookrides()
+	{
+		for(Ride r:rides)
+		{
+			if(r.getStatus().equalsIgnoreCase("Booked"));
+			System.out.println(r);
+		}
+		
+	}
+	public void displayCancelrides()
+	{
+		for(Ride r:rides)
+		{
+			if(r.getStatus().equalsIgnoreCase("cancle"));
+			System.out.println(r);
+		}
+		
+	}
+}
+--------------
+package ridesharingsys;
+
+import java.util.ArrayList;
+
+public class Driver {
+
+	int driverId;
+	String name;
+	ArrayList<Ride>rides;
+	public Driver(int driverId, String name) {
+		super();
+		this.driverId = driverId;
+		this.name = name;
+		this.rides = new ArrayList<Ride>();
+	}
+	public int getDriverId() {
+		return driverId;
+	}
+	public void setDriverId(int driverId) {
+		this.driverId = driverId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public ArrayList<Ride> getRides() {
+		return rides;
+	}
+	public void setRides(ArrayList<Ride> rides) {
+		this.rides = rides;
+	}
+	@Override
+	public String toString() {
+		return "Driver [driverId=" + driverId + ", name=" + name + ", rides=" + rides + "]";
+	}
+	public void assignRide(Ride r)
+	{
+		rides.add(r);
+		System.out.println("Ride is assigned to "+name+" successfully..");
+	}
+}
+---------------------
+package ridesharingsys;
+
+import java.util.ArrayList;
+
+public class RideAdmine {
+
+	static int rideId=1001;
+	ArrayList<Ride>rides= new ArrayList<>();
+	ArrayList<Customer>customer= new ArrayList<>();
+	ArrayList<Driver>drivers= new ArrayList<>();
+	
+	public void addCustomer(Customer c)
+	{
+		customer.add(c);
+		System.out.println("Customer added Successfully..");
+	}
+	public void addDriver(Driver d)
+	{
+		drivers.add(d);
+		System.out.println("Driver added Successfully..");
+	}
+	public void bookRide(int cid,int did,String src,String dest,int fare) 
+	{
+		//ride class object store in arraylist
+		//store data for the ride customer ride collection 
+		//store data in driver arraylist 
+		Ride r= new Ride(rideId++, src, dest, fare);
+		rides.add(r);
+		Customer c=getCustomerById(cid);
+		c.bookride(r);
+		Driver d=getDriverById(did);
+		d.assignRide(r);
+		System.out.println("Ride Booked Successfully...");
+	}
+	public void cancekRide(int custId,int rideID)
+	{
+		Ride r= getRideById(rideID);
+		Customer c=getCustomerById(custId);
+		rides.remove(r);
+		c.cancelride(rideID);
+		System.out.println("Ride cancel Successfully...");
+	}
+	public Customer getCustomerById(int id)
+	{
+		for(Customer c: customer)
+		{
+			if(c.getCustid()==id)
+			{
+				return c;
+			}
+		}return null;
+	}
+	public Driver getDriverById(int id)
+	{
+		for(Driver d: drivers)
+		{
+			if(d.getDriverId()==id)
+			{
+				return d;
+			}
+		}return null;
+	}
+	public Ride getRideById(int id)
+	{
+		for(Ride r: rides)
+		{
+			if(r.getRideid()==id)
+			{
+				return r;
+			}
+		}return null;
+	}
+	public void displayCustomer()
+	{
+		for(Customer c: customer)
+		{
+			System.out.println(c);
+		}
+	}
+	public void displayDriver()
+	{
+		for(Driver d: drivers)
+		{
+			System.out.println(d);
+		}
+	}
+	public void displayRide()
+	{
+		for(Ride r: rides)
+		{
+			System.out.println(r);
+		}
+	}
+}
+---------------
+package ridesharingsys;
+
+import java.util.Scanner;
+
+public class Tester {
+	
+	static int custid=1001;
+	static int driverid=2001;
+	public static void main(String[] args) {
+		Scanner sc= new Scanner(System.in);
+		int ch=0;
+		RideAdmine ra= new RideAdmine();
+		do {System.out.print("""
+				===========================================
+				1.ADD CUSTOMER 2.ADD DRIVER 3.BOOK RIDE
+				4.CANCEL RIDE 5.DISPLAY ALL RIDE 6.CALCULATE FARE
+				7.DISPLAY CUSTOMER D 8.DISPLAY DRIVERS 9.EXIT
+				=========================================== 
+				""");
+		
+			System.out.println("Enter your Choice");
+			ch=sc.nextInt();
+			try {
+				switch (ch) {
+				case 1:
+					System.out.println(" Enter Customer name");
+					String name = sc.next();
+					Customer c = new Customer(custid++, name);
+					ra.addCustomer(c);
+					break;
+				case 2:
+					System.out.println("Enter driver name");
+					String dname = sc.next();
+					Driver d = new Driver(driverid++, dname);
+					ra.addDriver(d);
+					break;
+				case 3:
+					System.out.println("Enter Customer ID, Driver ID,Source,Destination" + " Fare");
+					int cid = sc.nextInt();
+					int did = sc.nextInt();
+					String src = sc.next();
+					String dest = sc.next();
+					int fare = sc.nextInt();
+					ra.bookRide(cid, did, src, dest, fare);
+					break;
+				case 4:
+					System.out.println("Enter customer id,Ride ID");
+					int custID = sc.nextInt();
+					int rideID = sc.nextInt();
+					ra.cancekRide(custID, rideID);
+					break;
+				case 5:
+					System.out.println("Displaying all ride Details");
+					ra.displayRide();
+					break;
+				case 6:
+					System.out.println("Enter Customer ID");
+					int id = sc.nextInt();
+					boolean found = false;
+					for (Customer c1 : ra.customer) {
+						if (c1.getCustid() == id) {
+							c1.calculatebill();
+							found = true;
+							break;
+						}
+						if (found == false) {
+							System.out.println("Customer not found for given ID");
+						}
+
+					}
+					break;
+				case 7:
+					System.out.println("Customer Deatils");
+					ra.displayCustomer();
+					break;
+				case 8:
+					System.out.println("Driver Details");
+					ra.displayDriver();
+				case 9:
+					System.out.println("EXITING...");
+					break;
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}while(ch!=9);
+	}
+}
+=====================SHOP MANAGEMENT SYSTEM============================
+package productmanagement;
+
+public class Product {
+	static int idGenerator=1000;
+	int id;
+	String name;
+	int price;
+	
+	Product(String name,int price){
+		this.name=name;
+		this.price=price;
+		this.id=idGenerator++;
+	}
+
+	public static int getIdGenerator() {
+		return idGenerator;
+	}
+
+	public static void setIdGenerator(int idGenerator) {
+		Product.idGenerator = idGenerator;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", price=" + price + "]";
+	}
+	
+	
+}
+---------------------
+package productmanagement;
+
+import java.util.ArrayList;
+
+public class Customer {
+static int idGenerator=2000;
+int id;
+String name;
+long contactNo;
+ArrayList<Product>products;
+public Customer(String name, long contactNo) {
+	super();
+	this.name = name;
+	this.contactNo = contactNo;
+	this.id=idGenerator++;
+	products=new ArrayList<Product>();
+}
+public void addProduct(Product p) {
+	products.add(p);
+	System.out.println("product with product id: "+p.getId()+" added successfully");
+}
+public void removeProduct(int id) {
+	for(Product p:products) {
+		if(p.getId()==id) {
+			products.remove(p);
+			System.out.println(p+" removed successfully");
+			return;
+		}
+	}
+	System.out.println("Product not found with id: "+id);
+}
+public void displayAllProducts() {
+	for(Product p:products) {
+		System.out.println(p);
+	}
+}
+public int calBill() {
+	int tot=0;
+	for(Product p:products) {
+		tot+=p.getPrice();
+	}
+	return tot;
+}
+@Override
+public String toString() {
+	return "Customer [id=" + id + ", name=" + name + ", contactNo=" + contactNo + ", products=" + products + "]";
+}
+public int getId() {
+	return id;
+}
+public void setId(int id) {
+	this.id = id;
+}
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public long getContactNo() {
+	return contactNo;
+}
+public void setContactNo(long contactNo) {
+	this.contactNo = contactNo;
+}
+
+}
+------------------------
+package productmanagement;
+
+import java.time.LocalDateTime;
+
+public class Transaction {
+	static int idGenerator=2000;
+	int id;
+	int custId;
+	int productId;
+	String status;
+	LocalDateTime time;
+	public Transaction(int custId, int productId, String status) {
+		super();
+		this.id=idGenerator++;
+		this.custId = custId;
+		this.productId = productId;
+		this.status=status;
+		this.time = time.now();
+	}
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", custId=" + custId + ", productId=" + productId + ", status=" + status
+				+ ", time=" + time + "]";
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getCustId() {
+		return custId;
+	}
+	public void setCustId(int custId) {
+		this.custId = custId;
+	}
+	public int getProductId() {
+		return productId;
+	}
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public LocalDateTime getTime() {
+		return time;
+	}
+	public void setTime(LocalDateTime time) {
+		this.time = time;
+	}
+	
+}
+------------------------
+package productmanagement;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+
+public class Shop {
+ArrayList<Product>products=new ArrayList<Product>();
+ArrayList<Customer>customers=new ArrayList<Customer>();
+ArrayList<Transaction>transactions=new ArrayList<Transaction>();
+final String path="./src/resources/file1.txt";
+public void logTransaction(String msg) {
+	try {
+		FileOutputStream fout=new FileOutputStream(path,true);
+		byte arr[]=msg.getBytes();
+		fout.write(arr);
+	} catch (Exception e) {
+		System.out.println(e.getMessage());
+	}
+}
+public void recordPurchase(int custId,int productId) {
+	Transaction tx=new Transaction(custId, productId, "Purchase");
+	System.out.println("Customer with customer id: "+custId+" purchased product with product id: "+productId);
+	String msg="Customer with customer id: "+custId+" purchased product with product id: "+productId;
+	logTransaction(msg);
+}
+public void recordReturn(int custId,int productId) {
+	Transaction tx=new Transaction(custId, productId, "Returned");
+	System.out.println("Customer with customer id: "+custId+" returned product with product id: "+productId);
+	String msg="Customer with customer id: "+custId+" returned product with product id: "+productId;
+	logTransaction(msg);
+}
+public Customer getCustomerById(int id) {
+	for(Customer c:customers) {
+		if(c.getId()==id) {
+			return c;
+		}
+	}
+	return null;
+}
+public Product getProductById(int id) {
+	for(Product p:products) {
+		if(p.getId()==id) {
+			return p;
+		}
+	}
+	return null;
+}
+public void doPurchase(int custId,int productId) {
+	for(Product p:products) {
+		if(p.getId()==productId) {
+			products.remove(p);
+			Customer c=getCustomerById(custId);
+			c.addProduct(p);
+			recordPurchase(custId, productId);
+			Transaction tx=new Transaction(custId, productId, "Purchase");
+			transactions.add(tx);
+			return;
+		}
+	}
+	System.out.println("Product not found..");
+}
+
+public void getReturn(int custId,int productId) {
+	for(Product p:products) {
+		if(p.getId()==productId) {
+			products.add(p);
+			Customer c=getCustomerById(custId);
+			c.removeProduct(productId);
+			recordReturn(custId, productId);
+			Transaction tx=new Transaction(custId, productId,"Returned");
+			transactions.add(tx);
+			return;
+		}
+	}
+	System.out.println("not found");
+}
+public void addProduct(Product p) {
+	products.add(p);
+	System.out.println("Product with product id:"+p.getId()+" added succcessfully");
+}
+public void removeProduct(int pid) {
+	for(Product p:products) {
+		if(p.getId()==pid) {
+			products.remove(p);
+		}
+	}
+}
+public void addCustomer(Customer c) {
+	customers.add(c);
+	System.out.println("Customer with customer id: "+c.getId()+" added successfully");
+}
+public void removeCustomer(int id) {
+	for(Customer c:customers) {
+		if(c.getId()==id) {
+			customers.remove(c);
+			System.out.println("Customer removed succssfully with id: "+c.getId());
+			return;
+		}
+	}
+	System.out.println("Customer not found");
+}
+public void displayAllCustomers() {
+	for(Customer c:customers) {
+		System.out.println(c);
+	}
+}
+public void displayAllProducts() {
+	for(Product p:products) {
+		System.out.println(p);
+	}
+}
+public int calBill(int id) {
+	int tot=0;
+	for(Customer c:customers) {
+		if(c.getId()==id) {
+			tot=c.calBill();
+			return tot;
+		}
+	}
+	return tot;
+}
+}
+--------------------
+package productmanagement;
+
+import java.util.Scanner;
+
+public class Tester {
+
+	public static void main(String[] args) {
+		Shop s=new Shop();
+		int ch=0;
+		Scanner sc=new Scanner(System.in);
+		do {
+			System.out.println("""
+					1.add customer
+					2.add product
+					3.display product
+					4.display customer
+					5.remove customer
+					6.purchase
+					7.return
+					8.calculate bill
+					9.exit shop
+					""");
+			System.out.println("\n Enter choice");
+			ch=sc.nextInt();
+			switch(ch) {
+			case 1:
+				System.out.println("Enter name");
+				String name=sc.next();
+				System.out.println("Enter contact number");
+				long cont=sc.nextLong();
+				Customer c=new Customer(name, cont);
+				s.addCustomer(c);
+				break;
+			case 2:
+				System.out.println("Enter product name");
+				String pr=sc.next();
+				System.out.println("Enter product price");
+				int price=sc.nextInt();
+				Product p=new Product(pr, price);
+				s.addProduct(p);
+				break;
+			case 3:
+				s.displayAllProducts();
+				break;
+			case 4:
+				s.displayAllCustomers();
+				break;
+			case 5:
+				System.out.println("Enter customer id");
+				int custId=sc.nextInt();
+				s.removeCustomer(custId);
+				break;
+			case 6:
+				System.out.println("Enter customer id");
+				int cid=sc.nextInt();
+				System.out.println("Enter product id:");
+				int pid=sc.nextInt();
+				s.recordPurchase(cid, pid);
+				break;
+			case 7:
+				System.out.println("Enter customer id");
+				int cid1=sc.nextInt();
+				System.out.println("Enter product id:");
+				int pid1=sc.nextInt();
+				s.recordReturn(cid1, pid1);
+				break;
+			case 8:
+				System.out.println("Enter customer id:");
+				int c1=sc.nextInt();
+				System.out.println( s.calBill(c1));
+				break;
+			case 9:
+				System.out.println("Exiting..");
+				break;
+				default:
+					System.out.println("Enter valid choice");
+					break;
+			}
+		}while(ch!=9);
+	}
+
+}
+=======================EMPLOYEE MANAGEMENT====================
+Employee Management System:-
+package EmployeeManagementSys;
+
+public class Employee {
+
+	int empid;
+	String name;
+	double salary;
+	
+	static int empCount=0;
+	static double raiseper;
+	public Employee(int empid, String name, double salary) {
+		super();
+		this.empid = empid;
+		this.name = name;
+		this.salary = salary;
+		empCount++;
+	}
+	public static void setraiseper(double percent)
+	{
+		raiseper=percent;
+	}
+	public static void displayCount()
+	{
+		System.out.println("Number of employee:"+empCount);
+	}
+	
+	public void displayempDetails()
+	{
+		System.out.println("ID:"+empid+"    Name:"+name+"    Salary:"+salary);
+	}
+	@Override
+	public String toString() {
+		return "Employee [empid=" + empid + ", name=" + name + ", salary=" + salary + "]";
+	}
+	public void raisesal()
+	{
+		double hike=salary*raiseper/100;
+		salary+=hike;
+		
+	}
+	
+}
+-----------
+package EmployeeManagementSys;
+
+public class Manager extends Employee {
+	String deptname;
+	public Manager(int empid, String name, double salary, String deptname) {
+		super(empid, name, salary);
+		this.deptname = deptname;
+	}
+
+	@Override
+	public void displayempDetails()
+	{
+		System.out.println("ID:"+empid+"    Name:"+name+"    Salary:"+salary+"    DepartmentName"+deptname);
+	}
+	
+	
+}
+-----------
+package EmployeeManagementSys;
+
+import java.util.ArrayList;
+
+public class Department {
+
+	String dname;
+	ArrayList<Employee>employees;
+	public Department(String dname) {
+		super();
+		this.dname = dname;
+		this.employees=new ArrayList<Employee>();
+	}
+	public void addEmployee(Employee e)
+	{
+		employees.add(e);
+		System.out.println("Employee add successfully...");
+	}
+	public void removeemp(int id)
+	{for(Employee e:employees)
+	  {
+		if(e.empid==id)
+		{
+			employees.remove(e);
+			System.out.println("Employee Removed Successfully...");
+		  return;
+		}
+	  }
+	}
+	public void displayEmp()
+	{
+		for(Employee e:employees)
+		{
+			e.displayempDetails();
+		}
+	}
+	@Override
+	public String toString() {
+		return "Department [dname=" + dname + ", employees=" + employees + "]";
+	}
+}
+-----------------------
+package EmployeeManagementSys;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class CompanyHr {
+
+	ArrayList<Department> departments=new ArrayList<Department>();
+	Scanner sc=new Scanner(System.in);
+	static int id=1001;
+	public void addDepartment()
+	{
+		System.out.println("Enter Department Name");
+		String dname=sc.next();
+		Department d=new Department(dname);
+		departments.add(d);
+	}
+	public void displaydept()
+	{
+		for(Department d:departments)
+		{
+		System.out.println(d.toString());
+		}
+	}
+	public void addEmpToDept()
+	{
+		//1.take value from user for dname
+		System.out.println("Enter department name");
+		String deptname=sc.next();
+		//2. use for loop/each loop to find given deptname
+		for(Department d:departments)
+		{
+			if(d.dname.equalsIgnoreCase(deptname)) {
+				//ask user for choice 1.emp 2.manager
+				System.out.println("Enter your choice 1.Employee 2.Manager");
+				int ch=sc.nextInt();
+				System.out.println("Enter details id,name,salary");
+				int id=sc.nextInt();
+				String name=sc.next();
+				double salary=sc.nextDouble();
+				if(ch==1)
+				{
+					Employee emp=new Employee(id++, name, salary);
+					d.addEmployee(emp);
+					System.out.println("Employee Added Successfully..");
+					return;
+				}else if(ch==2)
+				{
+					Manager mgr=new Manager(id++, name, salary,deptname);
+					d.addEmployee(mgr);
+					System.out.println("Manager Added Successfully..");
+					return;
+				}
+				
+			}
+		}System.out.println("Department not found");
+	}
+	public void displayDeptEmp()
+	{
+		System.out.println("Enter department name");
+		String name=sc.next();
+		for(Department d: departments)
+		{
+			if(d.dname.equalsIgnoreCase(name))
+			{
+				d.displayEmp();
+			}
+		}
+	}
+	
+	public void removeEmpfromDept()
+	{
+		System.out.println("Enter Department name");
+		String dname=sc.next();
+		for(Department d:departments)
+		{
+			if(d.dname.equalsIgnoreCase(dname))
+			{
+				System.out.println("Enter Employee ID");
+				int id=sc.nextInt();
+				d.removeemp(id);
+				System.out.println("Employee ID: "+id+" You are fired..!!!");
+				return;
+			}
+		}
+		System.out.println("Department not found");
+	}
+	public void applyRaiseToAll()
+	{
+		System.out.println("Enter hike percentage");
+		double percent=sc.nextDouble();
+		Employee.setraiseper(percent);
+		for(Department d: departments)
+		{
+			for(Employee e: d.employees)
+			{
+				e.raisesal();
+			}
+		}
+	}
+	public void displayEmpCount()
+	{
+		System.out.println("Enter department name");
+		String dname=sc.next();
+		for(Department d:departments) {
+			if(d.dname.equalsIgnoreCase(dname))
+			{
+				Employee.displayCount();
+			}
+		}
+	}
+}
+-----------------
+package EmployeeManagementSys;
+import java.util.Scanner;
+public class EmpTester {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int ch=0;
+		CompanyHr hr= new CompanyHr();
+		System.out.println("Enter your choice");
+		do {
+			System.out.println("1.Add Department \n2.Add Employee/Manager \n3.Dispaly Employees of a Department"
+					+ "\n4.Remove Employee \n 5.Apply Raise to all Employees \n 6.Exit \n 7.Display All Departments \r\n 8.Display Employee count");
+			ch=sc.nextInt();
+			switch(ch)
+			{
+			case 1:
+				hr.addDepartment();
+				break;
+			case 2:
+				hr.addEmpToDept();
+				break;
+			case 3:
+				hr.displayDeptEmp();
+				break;
+			case 4:
+				hr.removeEmpfromDept();
+				break;
+			case 5:
+				hr.applyRaiseToAll();
+				break;
+			case 6 :
+				System.out.println("Exiting....");
+				break;
+			case 7:
+				hr.displaydept();
+				break;
+			case 8:
+				hr.displayEmpCount();
+				break;
+				
+			}
+	
+		}while(ch!=6);
+	}
+
+}
+
+====================HOSPITAL MANAGEMENT==========================
+package hospitalManagementSystem;
+
+public class Patient {
+	static int idGenerator=1000;
+	int id;
+	String name;
+	int age;
+	long contactNumber;
+	
+	public Patient( String name, int age, long contactNumber) {
+		super();
+		this.id = idGenerator++;
+		this.name = name;
+		this.age = age;
+		this.contactNumber = contactNumber;
+	}
+	
+	
+
+	public static int getIdGenerator() {
+		return idGenerator;
+	}
+
+	public static void setIdGenerator(int idGenerator) {
+		Patient.idGenerator = idGenerator;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public long getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(long contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", age=" + age + ", contactNumber=" + contactNumber + "]";
+	}
+
+	
+}
+------------------------
+package hospitalManagementSystem;
+
+public class Doctor {
+	static int idGenerator=2000;
+	int id;
+	String name;
+	String specialization;
+	long contactNumber;
+	boolean isAvailable;
+	
+	public Doctor(String name, String specialization, long contactNumber) {
+		super();
+		this.name = name;
+		this.specialization = specialization;
+		this.contactNumber = contactNumber;
+		this.id=idGenerator++;
+		this.isAvailable=true;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSpecialization() {
+		return specialization;
+	}
+	public void setSpecialization(String specialization) {
+		this.specialization = specialization;
+	}
+	public long getContactNumber() {
+		return contactNumber;
+	}
+	public void setContactNumber(long contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+	public boolean isAvailable() {
+		return isAvailable;
+	}
+	public void setAvailable(boolean isAvailable) {
+		this.isAvailable = isAvailable;
+	}
+
+	@Override
+	public String toString() {
+		return "Doctor [id=" + id + ", name=" + name + ", specialization=" + specialization + ", contactNumber="
+				+ contactNumber + ", isAvailable=" + isAvailable + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	
+}
+-------------------------
+package hospitalManagementSystem;
+
+import java.time.LocalDateTime;
+
+public class Transaction {
+	static int idGenerator=3000;
+	int transactionId;
+	int doctorId;
+	int patientId;
+	String status;
+	 LocalDateTime time;
+	public Transaction(int doctorId, int patientId, String status) {
+		super();
+		this.doctorId = doctorId;
+		this.patientId = patientId;
+		this.status = status;
+		this.transactionId=idGenerator++;
+		this.time=time.now();
+	}
+	public int getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+	public int getDoctorId() {
+		return doctorId;
+	}
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
+	}
+	public int getPatientId() {
+		return patientId;
+	}
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "Transaction [transactionId=" + transactionId + ", doctorId=" + doctorId + ", patientId=" + patientId
+				+ ", status=" + status + "]";
+	}
+	
+}
+-------------------------
+package hospitalManagementSystem;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+
+public class Hospital {
+	ArrayList<Patient>patients=new ArrayList<Patient>();
+	ArrayList<Doctor>doctors=new ArrayList<Doctor>();
+	ArrayList<Transaction>transactions=new ArrayList<Transaction>();
+	final String path="./src/resources/file.txt";
+	
+	public void logDetails(String msg) {
+		try {
+			FileOutputStream fout=new FileOutputStream(path,true);
+			byte[]data=msg.getBytes();
+			fout.write(data);
+			//System.out.println("written");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void recordTransaction(int doctorId,int patientId) {
+		Transaction tx=new Transaction(doctorId,patientId,"Book");
+		System.out.println("Booking for patient: "+patientId+" with "+doctorId
+				+" scheduled successfully "+tx.time);
+		//for storing in file
+		String msg="Booking for patient: "+patientId+" with "+doctorId
+				+" scheduled successfully "+tx.time;
+		logDetails(msg);
+	}
+	
+	public void recordCancellation(int doctorId,int patientId) {
+		Transaction tx=new Transaction(doctorId,patientId,"Cancel");
+		System.out.println("Booking for patient: "+patientId+" with "+doctorId
+				+" cancelled "+tx.time);
+		//for storing in file
+		String msg="Booking for patient: "+patientId+" with "+doctorId
+				+" cancelled "+tx.time;
+		logDetails(msg);
+	}
+	
+	public void scheduleAppointment(int doctorId,int patientId) {
+		Doctor d=getDoctorById(doctorId);
+		Patient p=getPatientById(patientId);
+		if(d.isAvailable()) {
+			Transaction tx=new Transaction(doctorId,patientId,"Book");
+			transactions.add(tx);
+			d.setAvailable(false);
+			recordTransaction(doctorId, patientId);
+		}else {
+			System.out.println("Doctor is not available");
+		}
+	}
+	
+	public void cancelAppointment(int doctorId,int patientId) {
+		for(Transaction tx:transactions) {
+			if(tx.doctorId==doctorId) {
+				Doctor d=getDoctorById(doctorId);
+				d.setAvailable(true);
+				tx.setStatus("Cancel");
+				recordCancellation(doctorId, patientId);
+				return;
+			}
+		}
+		System.out.println("Appointment not found");
+	}
+	
+	public void addDoctor(Doctor d) {
+		doctors.add(d);
+		System.out.println("Doctor with id "+d.getId()+" added successfully");
+	}
+	
+	public void removeDoctor(int doctorId) {
+		for(Doctor d:doctors) {
+			if(d.getId()==doctorId) {
+				doctors.remove(d);
+				System.out.println("Doctor removed succesfully");
+				return;
+			}
+		}
+		System.out.println("Doctor with given id not found");
+	}
+	
+	public void displayDoctors() {
+		for(Doctor d:doctors) {
+			System.out.println(d);
+		}
+	}
+	
+	public Doctor getDoctorById(int id) {
+		for(Doctor d:doctors) {
+			if(d.getId()==id) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
+	public void updateDoctorDetails(int id,String specialization) {
+		for(Doctor d:doctors) {
+			if(d.getId()==id) {
+				System.out.println("Record Updated successfully");
+				return;
+			}
+		}
+		System.out.println("Record not found with given id");
+	}
+	
+	public void addPatient(Patient p) {
+		patients.add(p);
+		System.out.println("patient with patient id :"+p.getId()+" added successfully");
+	}
+	
+	public void removePatient(int id) {
+		for(Patient p:patients) {
+			if(p.getId()==id) {
+				patients.remove(p);
+				return;
+			}
+		}
+		System.out.println("Patient with given id not found");
+	}
+	
+	public void displayPatients() {
+		for(Patient p:patients) {
+			System.out.println(p);
+		}
+	}
+	
+	public Patient getPatientById(int id) {
+		for(Patient p:patients) {
+			if(p.getId()==id) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	public void updatePatientDetails(int id,long PhoneNo) {
+		for(Patient p:patients) {
+			if(p.getId()==id) {
+				p.setContactNumber(PhoneNo);
+				System.out.println("Record updated successfully");
+				return;
+			}
+		}
+		System.out.println("Details not found");
+	}
+	
+	public void displayAppointmentDetails() {
+		for(Transaction t:transactions) {
+			System.out.println(t);
+		}
+	}
+}
+------------------------
+package hospitalManagementSystem;
+
+import java.util.Scanner;
+
+public class Tester {
+
+	public static void main(String[] args) {
+	Hospital obj=new Hospital();
+	Scanner sc=new Scanner(System.in);
+	int ch=0;
+	do {
+		System.out.println("""
+				==================================================
+				1.add patient 2.add doctor 3.display patient 4.display doctor
+				5.schedule appointment 6.cancel apt 7. search dr 8.search patient
+				9.display all apt 10.remove patient 11.remove doctor 12.exit
+				""");
+		System.out.println("Enter your choice");
+		ch=sc.nextInt();
+		switch(ch) {
+		case 1:
+			System.out.println("Enter name");
+			String name=sc.next();
+			System.out.println("Enter age");
+			int age=sc.nextInt();
+			System.out.println("Enter phone number ");
+			long phone=sc.nextLong();
+			Patient p=new Patient(name, age, phone);
+			obj.addPatient(p);
+			break;
+		case 2:
+			System.out.println("Enter Name");
+			String dname=sc.next();
+			System.out.println("Enter specialization");
+			String sp=sc.next();
+			System.out.println("Enter phone number");
+			long pho=sc.nextLong();
+			Doctor d=new Doctor(dname, sp, pho);
+			obj.addDoctor(d);
+			break;
+		case 3:
+			System.out.println("Displaying patient details");
+			obj.displayPatients();
+			break;
+		case 4:
+			System.out.println("Displaying doctor details");
+			obj.displayDoctors();
+			break;
+		case 5:
+			System.out.println("Enter doctor id");
+			int did=sc.nextInt();
+			System.out.println("Enter patient id");
+			int pid=sc.nextInt();
+			obj.scheduleAppointment(did, pid);
+			break;
+		case 6:
+			System.out.println("Enter doctor id");
+			int did1=sc.nextInt();
+			System.out.println("Enter patient id");
+			int pid1=sc.nextInt();
+			obj.cancelAppointment(did1, pid1);
+			break;
+		case 7:
+			System.out.println("Enter doctor id");
+			int did2=sc.nextInt();
+			System.out.println(obj.getDoctorById(did2));
+			break;
+		case 8:
+			System.out.println("Enter patient id");
+			int pid2=sc.nextInt();
+			System.out.println(obj.getPatientById(pid2));
+			break;
+		case 9:
+			obj.displayAppointmentDetails();
+			break;
+		case 10:
+			System.out.println("Enter patient id");
+			int pid3=sc.nextInt();
+			obj.removePatient(pid3);
+			break;
+		case 11:
+			System.out.println("Enter doctor id");
+			int did3=sc.nextInt();
+			obj.removeDoctor(did3);
+			break;
+		case 12:
+			System.out.println("Exiting...");
+			break;
+		default:
+			System.out.println("Enter valid details");
+			break;
+		}
+	}while(ch!=12);
+	}
+}
+
